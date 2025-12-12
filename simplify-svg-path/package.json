@@ -1,7 +1,7 @@
 {
-  "name": "pathkit-simplify",
+  "name": "simplify-svg-path",
   "version": "1.0.0",
-  "description": "Minimal path simplification library based on Skia's PathOps - only 260KB WASM!",
+  "description": "Minimal path simplification library based on Skia's PathOps",
   "main": "dist/simplifypath.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -17,6 +17,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/pathkit-simplify.git"
+    "url": "https://github.com/hylimo/simplify-svg-path.git",
+    "directory": "simplify-svg-path"
   }
 }

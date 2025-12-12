@@ -1,6 +1,6 @@
 /**
  * SimplifySvgPath - TypeScript Definitions
- * 
+ *
  * A minimal WASM build of Skia's PathOps for SVG path simplification.
  * Based on google/skia - Copyright (c) 2011 Google Inc.
  */
@@ -14,12 +14,12 @@ export enum FillType {
    * A point is inside if the winding number is non-zero.
    */
   Winding = 0,
-  
+
   /**
    * Even-odd fill type.
    * A point is inside if the winding number is odd.
    */
-  EvenOdd = 1
+  EvenOdd = 1,
 }
 
 export interface Path {
@@ -57,7 +57,7 @@ export interface PathConstructor {
   /**
    * Creates a new empty Path.
    */
-  new(): Path;
+  new (): Path;
 
   /**
    * Creates a Path from an SVG path data string.
@@ -81,15 +81,15 @@ export interface SimplifySvgPathModule {
   /**
    * Convenience function to simplify an SVG path string in one call.
    * This function handles all path creation and cleanup automatically.
-   * 
+   *
    * @param svgPath - SVG path data string to simplify
    * @param fillType - Optional fill type (defaults to FillType.Winding)
    * @returns Simplified SVG path string, or null if simplification fails
-   * 
+   *
    * @example
    * // Using default Winding fill type
    * const simplified = SimplifySvgPath.simplifySvgPath('M0 0L100 100L100 0L0 100Z');
-   * 
+   *
    * @example
    * // Using EvenOdd fill type
    * const simplified = SimplifySvgPath.simplifySvgPath(
@@ -105,27 +105,41 @@ export interface SimplifySvgPathInitOptions {
    * Path to the WASM file. If not provided, will try to load from the same directory as the JS file.
    */
   locateFile?: (file: string, scriptDirectory: string) => string;
-  
+
   /**
    * Provide the WASM binary content directly instead of loading from a file.
    * This is useful when you want to bundle the WASM or load it from a custom source.
    * When provided, the WASM file will not be fetched automatically.
-   * 
+   *
    * @example
    * const fs = require('fs');
    * const wasmBinary = fs.readFileSync('./simplifypath.wasm');
    * const SimplifySvgPath = await SimplifySvgPathInit({ wasmBinary });
    */
   wasmBinary?: ArrayBuffer | Uint8Array;
+
+  /**
+   * Custom WebAssembly instantiation hook used by Emscripten.
+   *
+   * @param imports  The imports required by the WebAssembly module.
+   * @param successCallback  Call this after the module has been successfully instantiated.
+   *
+   * @returns The module's exports if instantiated synchronously, otherwise undefined.
+   */
+  instantiateWasm(
+    imports: WebAssembly.Imports,
+    successCallback: (module: WebAssembly.Instance) => void
+  ): WebAssembly.Exports | undefined;
 }
 
 /**
  * Initializes the SimplifySvgPath module.
- * 
+ *
  * @param options - Optional initialization options
  * @returns Promise that resolves to the initialized module
- * 
+ *
  * @example
+ * import SimplifySvgPathInit from 'simplify-svg-path';
  * const SimplifySvgPath = await SimplifySvgPathInit();
  * const result = SimplifySvgPath.simplifySvgPath('M0 0L10 10');
  */

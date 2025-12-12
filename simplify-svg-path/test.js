@@ -1,4 +1,10 @@
-const SimplifySvgPathInit = require('./dist/simplifypath.js');
+import SimplifySvgPathInit from './dist/simplifypath.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function runTests() {
   console.log('Initializing SimplifySvgPath...');
@@ -163,9 +169,6 @@ async function runTests() {
   // Test 14: Initialize with custom wasmBinary (manually providing WASM file content)
   console.log('\n--- Testing with manually provided WASM binary ---');
   try {
-    const fs = require('fs');
-    const path = require('path');
-    
     // Read the WASM file as a buffer
     const wasmPath = path.join(__dirname, 'dist', 'simplifypath.wasm');
     const wasmBinary = fs.readFileSync(wasmPath);
@@ -204,4 +207,5 @@ runTests().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });
+
 

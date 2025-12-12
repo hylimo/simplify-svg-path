@@ -21,6 +21,9 @@ echo "Copying compiled files to simplify-svg-path/dist..."
 cp skia/out/simplifypath_wasm/simplifypath.js simplify-svg-path/dist/
 cp skia/out/simplifypath_wasm/simplifypath.wasm simplify-svg-path/dist/
 
+# Copy the root README into the package (generated during build, not tracked)
+cp README.md simplify-svg-path/README.md
+
 echo ""
 echo "Build complete!"
 echo "Files copied to simplify-svg-path/dist/"

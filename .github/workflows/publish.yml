@@ -36,4 +36,6 @@ jobs:
           cd simplify-svg-path
           npm test
       - name: Publish packages
-        run: npm publish --provenance --access public
+        run: |
+          cd simplify-svg-path
+          npm publish --provenance --access public

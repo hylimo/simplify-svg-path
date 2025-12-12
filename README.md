@@ -1,16 +1,96 @@
-# SimplifySvgPath - Skia Fork
+# SimplifySvgPath
 
-This repository contains a fork of [google/skia](https://github.com/google/skia) with a minimal WebAssembly build focused on SVG path simplification using Skia's powerful PathOps.
+> **A minimal path simplification library based on Skia's PathOps**
+> 
+> **This is a fork of [google/skia](https://github.com/google/skia) - specifically a stripped-down version focusing only on SVG path simplification.**
 
-## What is this?
+## About
 
-This project extracts Skia's path operations functionality and compiles it to WebAssembly, creating a tiny (~260KB) library for simplifying SVG paths. It removes self-intersections, overlaps, and redundant segments from SVG path data.
+This package provides a tiny WebAssembly build of Skia's powerful PathOps functionality, allowing you to simplify SVG paths by removing self-intersections and overlaps. The entire WASM bundle is only ~260KB, making it suitable for use in browsers and Node.js applications.
+
+## Installation
+
+```bash
+npm install simplify-svg-path
+```
+
+## Features
+
+- ✨ **Simple API** - Easy-to-use functions for path simplification
+- 🎯 **Tiny Size** - Only ~260KB WASM bundle
+- 🚀 **Fast** - Powered by Skia's battle-tested PathOps
+- 🌐 **Universal** - Works in Node.js and browsers
+- 📦 **Self-contained** - No external dependencies
+
+## Quick Start
+
+```javascript
+const SimplifySvgPathInit = require('simplify-svg-path');
+
+async function main() {
+  // Initialize the module
+  const SimplifySvgPath = await SimplifySvgPathInit();
+  
+  // Simple helper function - takes an SVG path string, returns simplified string
+  const simplified = SimplifySvgPath.simplifySvgPath('M0 0L100 100L100 0L0 100Z');
+  console.log(simplified); // Simplified SVG path string or null if failed
+  
+  // Or use the Path API for more control:
+  const path = SimplifySvgPath.Path.MakeFromSVGString('M0 0L100 100L100 0L0 100Z');
+  const simplifiedPath = path.simplify();
+  if (simplifiedPath) {
+    console.log(simplifiedPath.toSVGString());
+  }
+}
+
+main();
+```
+
+## API
+
+### `simplifySvgPath(svgPathString)`
+
+A convenience function that takes an SVG path string and returns the simplified path string.
+
+- **Parameters**
+  - `svgPathString` (string) - An SVG path data string
+  - `fillType` (optional, enum) - Fill type for the path (default is `Winding`)
+- **Returns**: Simplified SVG path string, or `null` if the path is invalid
+
+### Fill Types
+
+An enumeration with supported fill types:
+
+- `Winding` - Non-zero winding fill rule
+- `EvenOdd` - Even-odd fill rule
+
+### Path API
+
+For more advanced usage:
+
+- `Path.MakeFromSVGString(svgPath)` - Create a path from SVG path data
+- `Path.MakeFromSVGString(svgPath, fillType)` - Create a path with specified fill type
+- `path.toSVGString()` - Convert path back to SVG string format
+- `path.simplify()` - Simplify the path by removing self-intersections and overlaps
+- `path.getFillType()` - Get the fill type of the path
+- `path.setFillType(fillType)` - Set the fill type of the path
+
+## TypeScript
+
+TypeScript definitions are included in the package.
+
+```typescript
+import SimplifySvgPathInit from 'pathkit-simplify';
+
+const SimplifySvgPath = await SimplifySvgPathInit();
+const result = SimplifySvgPath.simplifySvgPath('M0 0L10 10');
+```
 
 ## Repository Structure
 
 ```
 .
-├── skia/                          # Skia source code (submodule or fork)
+├── skia/                         # Skia source code (submodule or fork)
 │   └── modules/simplifypath/     # Our minimal PathOps module
 │       ├── compile.sh            # Build script for the WASM module
 │       ├── path_simplify_bindings.cpp
@@ -35,43 +115,29 @@ This project extracts Skia's path operations functionality and compiles it to We
 
 ### Prerequisites
 
-- Python 3.x
-- Node.js 16+
-- Emscripten SDK (for building from source)
-- Git
+- Python 3.12+
+- Node.js 22+
 
 ### Initial Setup
 
 1. **Clone this repository**:
    ```bash
-   git clone https://github.com/yourusername/simplifysvgpath.git
-   cd simplifysvgpath
+   git clone https://github.com/hylimo/simplify-svg-path.git
+   cd simplify-svg-path
    ```
 
 2. **Run the setup script** to sync Skia dependencies:
    ```bash
-   chmod +x setup.sh
    ./setup.sh
    ```
 
    This will run `python3 tools/git-sync-deps` inside the Skia directory to fetch all required dependencies.
-
-3. **Install Emscripten** (if not already installed):
-   ```bash
-   cd ~
-   git clone https://github.com/emscripten-core/emsdk.git
-   cd emsdk
-   ./emsdk install latest
-   ./emsdk activate latest
-   source ./emsdk_env.sh
-   ```
 
 ## Building
 
 To build the SimplifySvgPath module:
 
 ```bash
-chmod +x build.sh
 ./build.sh
 ```
 
@@ -79,6 +145,7 @@ This will:
 1. Navigate to `skia/modules/simplifypath/`
 2. Run the compile script to build the WASM module
 3. Copy the generated `simplifypath.js` and `simplifypath.wasm` files to `simplify-svg-path/dist/`
+4. Copy this README to `simplify-svg-path/`
 
 The built files will be available in `simplify-svg-path/dist/`.
 
@@ -90,36 +157,6 @@ After building, you can run the test suite:
 cd simplify-svg-path
 npm test
 ```
-
-## Using the NPM Package
-
-The `simplify-svg-path/` directory contains a publishable NPM package. See [simplify-svg-path/README.md](simplify-svg-path/README.md) for usage instructions.
-
-Quick example:
-
-```javascript
-const SimplifySvgPathInit = require('pathkit-simplify');
-
-const SimplifySvgPath = await SimplifySvgPathInit();
-const simplified = SimplifySvgPath.simplifySvgPath('M0 0L100 100L100 0L0 100Z');
-console.log(simplified);
-```
-
-## Development
-
-### Project Structure
-
-- **`skia/modules/simplifypath/`** - Contains the C++ bindings and build configuration for the minimal PathOps WASM module
-- **`simplify-svg-path/`** - The NPM package that wraps the built WASM module
-- **`setup.sh`** - Syncs Skia dependencies
-- **`build.sh`** - Builds the module and copies outputs to the NPM package
-
-### Making Changes
-
-1. Modify the C++ bindings in `skia/modules/simplifypath/path_simplify_bindings.cpp`
-2. Update build configuration in `skia/modules/simplifypath/BUILD.gn` if needed
-3. Run `./build.sh` to rebuild
-4. Test your changes with `cd simplify-svg-path && npm test`
 
 ## CI/CD
 
@@ -136,6 +173,8 @@ To publish a new version:
 ## License
 
 This project is based on Skia and is licensed under the BSD-3-Clause license, the same as Skia.
+
+Original Skia license text:
 
 ```
 Copyright (c) 2011 Google Inc. All rights reserved.

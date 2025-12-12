@@ -105,7 +105,62 @@ async function runTests() {
     console.log(`  Output: ${simplified1}`);
   });
 
-  // Test 10: Initialize with custom wasmBinary (manually providing WASM file content)
+  // Test 10: FillType.Winding with simplifySvgPath
+  test('simplifySvgPath - with Winding fill type', () => {
+    const input = 'M0 0L100 100L100 0L0 100Z';
+    const result = SimplifySvgPath.simplifySvgPath(input, SimplifySvgPath.FillType.Winding);
+    if (!result) throw new Error('Expected simplified path, got null');
+    if (typeof result !== 'string') throw new Error('Expected string result');
+    console.log(`  Input:  ${input} (Winding)`);
+    console.log(`  Output: ${result}`);
+  });
+
+  // Test 11: FillType.EvenOdd with simplifySvgPath
+  test('simplifySvgPath - with EvenOdd fill type', () => {
+    const input = 'M0 0L100 100L100 0L0 100Z';
+    const result = SimplifySvgPath.simplifySvgPath(input, SimplifySvgPath.FillType.EvenOdd);
+    if (!result) throw new Error('Expected simplified path, got null');
+    if (typeof result !== 'string') throw new Error('Expected string result');
+    console.log(`  Input:  ${input} (EvenOdd)`);
+    console.log(`  Output: ${result}`);
+  });
+
+  // Test 12: Path.setFillType and getFillType
+  test('Path.setFillType and getFillType', () => {
+    const path = SimplifySvgPath.Path.MakeFromSVGString('M0 0L10 10');
+    if (!path) throw new Error('Failed to create path');
+    
+    // Default should be Winding
+    const defaultFillType = path.getFillType();
+    if (defaultFillType !== SimplifySvgPath.FillType.Winding) {
+      throw new Error(`Expected default fill type to be Winding (0), got ${defaultFillType}`);
+    }
+    
+    // Set to EvenOdd
+    path.setFillType(SimplifySvgPath.FillType.EvenOdd);
+    const newFillType = path.getFillType();
+    if (newFillType !== SimplifySvgPath.FillType.EvenOdd) {
+      throw new Error(`Expected fill type to be EvenOdd (1), got ${newFillType}`);
+    }
+    
+    console.log(`  Default: ${defaultFillType} (Winding)`);
+    console.log(`  After setFillType: ${newFillType} (EvenOdd)`);
+  });
+
+  // Test 13: Path.simplify with different fill types
+  test('Path.simplify - with EvenOdd fill type', () => {
+    const path = SimplifySvgPath.Path.MakeFromSVGString('M0 0L100 100L100 0L0 100Z');
+    if (!path) throw new Error('Failed to create path');
+    
+    path.setFillType(SimplifySvgPath.FillType.EvenOdd);
+    const simplified = path.simplify();
+    if (!simplified) throw new Error('Expected simplified path, got null');
+    
+    const result = simplified.toSVGString();
+    console.log(`  Output (EvenOdd): ${result}`);
+  });
+
+  // Test 14: Initialize with custom wasmBinary (manually providing WASM file content)
   console.log('\n--- Testing with manually provided WASM binary ---');
   try {
     const fs = require('fs');

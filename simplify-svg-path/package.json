@@ -1,0 +1,22 @@
+{
+  "name": "pathkit-simplify",
+  "version": "1.0.0",
+  "description": "Minimal path simplification library based on Skia's PathOps - only 260KB WASM!",
+  "main": "dist/simplifypath.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["path", "simplify", "svg", "pathops", "skia", "wasm"],
+  "author": "",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/pathkit-simplify.git"
+  }
+}

@@ -1,16 +1,14 @@
-name: Publish to NPM
+name: Build and Test
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      id-token: write
 
     steps:
       - name: Checkout code
@@ -24,9 +22,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "lts/*"
-      - name: Update npm
-        run: npm install -g npm@latest
+          node-version: 22.x
+          cache: npm
       - name: Setup
         run: ./setup.sh
       - name: Build SimplifySvgPath
@@ -35,7 +32,3 @@ jobs:
         run: |
           cd simplify-svg-path
           npm test
-      - name: Publish packages
-        run: |
-          cd simplify-svg-path
-          npm publish --provenance --access public

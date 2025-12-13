@@ -25,16 +25,16 @@ npm install simplify-svg-path
 ## Quick Start
 
 ```javascript
-const SimplifySvgPathInit = require('simplify-svg-path');
+import SimplifySvgPathInit from 'simplify-svg-path';
 
 async function main() {
   // Initialize the module
   const SimplifySvgPath = await SimplifySvgPathInit();
-  
-  // Simple helper function - takes an SVG path string, returns simplified string
+
+  // Convenience helper: takes an SVG path string, returns simplified string
   const simplified = SimplifySvgPath.simplifySvgPath('M0 0L100 100L100 0L0 100Z');
-  console.log(simplified); // Simplified SVG path string or null if failed
-  
+  console.log(simplified);
+
   // Or use the Path API for more control:
   const path = SimplifySvgPath.Path.MakeFromSVGString('M0 0L100 100L100 0L0 100Z');
   const simplifiedPath = path.simplify();
@@ -80,7 +80,7 @@ For more advanced usage:
 TypeScript definitions are included in the package.
 
 ```typescript
-import SimplifySvgPathInit from 'pathkit-simplify';
+import SimplifySvgPathInit from 'simplify-svg-path';
 
 const SimplifySvgPath = await SimplifySvgPathInit();
 const result = SimplifySvgPath.simplifySvgPath('M0 0L10 10');

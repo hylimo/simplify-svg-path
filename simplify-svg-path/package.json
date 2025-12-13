@@ -1,6 +1,6 @@
 {
   "name": "simplify-svg-path",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimal path simplification library based on Skia's PathOps",
   "type": "module",
   "main": "dist/simplifypath.js",
@@ -9,7 +9,8 @@
     ".": {
       "import": "./dist/simplifypath.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./simplifypath.wasm": "./dist/simplifypath.wasm"
   },
   "files": [
     "dist/**/*",
